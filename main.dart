@@ -1,154 +1,108 @@
-// ignore_for_file: library_private_types_in_public_api
-
+// Importação das bibliotecas necessárias para a aplicação Flutter
 import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
+import 'package:math_expressions/math_expressions.dart'; // Biblioteca para avaliar expressões matemáticas
 
-void main() {
-  runApp(const CalculatorApp());
-}
+void main() => runApp(const CalculatorApp()); // Função principal que executa o aplicativo
 
+// Classe principal do aplicativo, que retorna a interface do usuário
 class CalculatorApp extends StatelessWidget {
   const CalculatorApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Calculator(),
+      debugShowCheckedModeBanner: false, // Remove a faixa de debug da interface
+      home: Calculator(), // Define a tela principal como a calculadora
     );
   }
 }
 
+// Classe que representa a tela principal da calculadora
 class Calculator extends StatefulWidget {
   const Calculator({super.key});
 
   @override
-  _CalculatorState createState() => _CalculatorState();
+  _CalculatorState createState() => _CalculatorState(); // Cria o estado da calculadora
 }
 
+// Estado da calculadora onde a lógica de funcionamento está implementada
 class _CalculatorState extends State<Calculator> {
-  String _expression = "";
-  String _result = "0";
+  String _expression = "", _result = "0"; // Variáveis para armazenar a expressão digitada e o resultado
 
+  // Função chamada quando um botão da calculadora é pressionado
   void _onButtonPressed(String value) {
-    setState(() {
-      if (value == "C") {
+    setState(() { // Atualiza a interface do usuário
+      if (value == "C") { // Se o botão for "C", limpa a expressão e o resultado
         _expression = "";
         _result = "0";
-      } else if (value == "=") {
+      } else if (value == "=") { // Se o botão for "=", avalia a expressão matemática
         try {
-          Parser p = Parser();
-          Expression exp = p.parse(_expression);
-          ContextModel cm = ContextModel();
-          double eval = exp.evaluate(EvaluationType.REAL, cm);
-          _result = eval.toString();
+          _result = Parser() // Usa a biblioteca para avaliar a expressão
+              .parse(_expression)
+              .evaluate(EvaluationType.REAL, ContextModel())
+              .toString(); // Converte o resultado para string
         } catch (e) {
-          _result = "Error";
+          _result = "Error"; // Em caso de erro na expressão, exibe "Error"
         }
       } else {
-        _expression += value;
+        _expression += value; // Se for um número ou operador, adiciona à expressão
       }
     });
   }
 
-  Widget _buildButton(String text, Color color) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: ElevatedButton(
-          onPressed: () => _onButtonPressed(text),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: color,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+  // Função para criar os botões da calculadora de forma dinâmica
+  Widget _buildButton(String text, Color color) => Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(4.0), // Adiciona espaçamento entre os botões
+          child: ElevatedButton(
+            onPressed: () => _onButtonPressed(text), // Define a ação ao clicar no botão
+            style: ElevatedButton.styleFrom(
+              backgroundColor: color, // Define a cor do botão
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)), // Borda arredondada
+              padding: const EdgeInsets.all(20), // Tamanho do botão
             ),
-            padding: const EdgeInsets.all(20),
-          ),
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            child: Text(text, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-        title: const Text("Calculadora"),
-        backgroundColor: Colors.blueGrey,
-      ),
+      backgroundColor: Colors.grey[200], // Cor de fundo da tela
+      appBar: AppBar(title: const Text("Calculadora"), backgroundColor: Colors.blueGrey), // Barra superior com título
       body: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 2, // Área superior para exibição da expressão e do resultado
             child: Container(
               padding: const EdgeInsets.all(16.0),
-              alignment: Alignment.bottomRight,
+              alignment: Alignment.bottomRight, // Alinha os textos à direita
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    _expression,
-                    style: TextStyle(fontSize: 24, color: Colors.grey[800]),
-                  ),
+                  Text(_expression, style: TextStyle(fontSize: 24, color: Colors.grey[800])), // Exibe a expressão
                   const SizedBox(height: 10),
-                  Text(
-                    _result,
-                    style: const TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                  Text(_result, style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.black)), // Exibe o resultado
                 ],
               ),
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 3, // Área inferior com os botões da calculadora
             child: Column(
               children: [
-                Row(
-                  children: [
-                    _buildButton("7", Colors.blueGrey),
-                    _buildButton("8", Colors.blueGrey),
-                    _buildButton("9", Colors.blueGrey),
-                    _buildButton("/", Colors.orange),
-                  ],
-                ),
-                Row(
-                  children: [
-                    _buildButton("4", Colors.blueGrey),
-                    _buildButton("5", Colors.blueGrey),
-                    _buildButton("6", Colors.blueGrey),
-                    _buildButton("*", Colors.orange),
-                  ],
-                ),
-                Row(
-                  children: [
-                    _buildButton("1", Colors.blueGrey),
-                    _buildButton("2", Colors.blueGrey),
-                    _buildButton("3", Colors.blueGrey),
-                    _buildButton("-", Colors.orange),
-                  ],
-                ),
-                Row(
-                  children: [
-                    _buildButton("C", Colors.red),
-                    _buildButton("0", Colors.blueGrey),
-                    _buildButton("=", Colors.green),
-                    _buildButton("+", Colors.orange),
-                  ],
-                ),
+                for (var row in [["7", "8", "9", "/"], ["4", "5", "6", "*"], ["1", "2", "3", "-"], ["C", "0", "=", "+"]])
+                  Row(
+                    children: row.map((btn) => _buildButton(
+                      btn,
+                      btn == "C" ? Colors.red : // Define a cor do botão C (vermelho)
+                      btn == "=" ? Colors.green : // Define a cor do botão = (verde)
+                      "/+-*".contains(btn) ? Colors.orange : // Define a cor dos operadores (laranja)
+                      Colors.blueGrey // Define a cor dos números (azul acinzentado)
+                    )).toList(),
+                  ),
               ],
             ),
           ),
