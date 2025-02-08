@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -66,7 +64,7 @@ class _CalculatorState extends State<Calculator> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      appBar: AppBar(title: const Text("Calculadora"), backgroundColor: Colors.blueGrey),
+      appBar: AppBar(title: const Text("Calculadora Científica"), backgroundColor: Colors.blueGrey),
       body: Column(
         children: [
           Expanded(
@@ -86,27 +84,32 @@ class _CalculatorState extends State<Calculator> {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Column(
               children: [
-                for (var row in [["7", "8", "9", "/"], ["4", "5", "6", "*"], ["1", "2", "3", "-"], ["C", "0", "=", "+"]])
-                  Row(
-                    children: row.map((btn) => _buildButton(
-                      btn,
-                      btn == "C" ? Colors.red :
-                      btn == "=" ? Colors.green :
-                      "/+-*".contains(btn) ? Colors.orange :
-                      Colors.blueGrey
-                    )).toList(),
-                  ),
                 Row(
-                  children: ["sin(", "cos(", "tan(", "log("]
+                  children: ["sin(", "cos(", "tan(", "log(", "sqrt("]
                       .map((func) => _buildButton(func, Colors.purple))
                       .toList(),
                 ),
                 Row(
-                  children: [")", "(", "^", "%"]
-                      .map((symbol) => _buildButton(symbol, Colors.deepOrange))
+                  children: ["7", "8", "9", "/", "^"]
+                      .map((btn) => _buildButton(btn, Colors.orange))
+                      .toList(),
+                ),
+                Row(
+                  children: ["4", "5", "6", "*", "%"]
+                      .map((btn) => _buildButton(btn, Colors.orange))
+                      .toList(),
+                ),
+                Row(
+                  children: ["1", "2", "3", "-", "("]
+                      .map((btn) => _buildButton(btn, Colors.orange))
+                      .toList(),
+                ),
+                Row(
+                  children: ["C", "0", "=", "+", ")"]
+                      .map((btn) => _buildButton(btn, Colors.red))
                       .toList(),
                 ),
               ],
@@ -117,4 +120,3 @@ class _CalculatorState extends State<Calculator> {
     );
   }
 }
-
